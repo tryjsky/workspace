@@ -1,0 +1,3 @@
+VAULT_NAME=kv-jp-co-nsw-ryakush1
+RESOURCE_GROUP=rg-corporate-002
+VM_NAME=vmremotework003
