@@ -6,15 +6,14 @@ echo "[1-set]"
 
 #CLIENT_IP_ADDRESS=$(wget -q -O- https://checkip.amazonaws.com/)
 read -p "Your client IP address: " CLIENT_IP_ADDRESS
-ADMIN_USER=$(az keyvault secret show --vault-name ${VAULT_NAME} -n "adminUser" --query value -o tsv)
 INSTALL_URI=$(az keyvault secret show --vault-name ${VAULT_NAME} -n "installUri" --query value -o tsv)
 INSTALL_FILE="D:/"$(basename $INSTALL_URI)
 
 echo "Update user settings..."
 az vm run-command invoke  --command-id RunPowerShellScript -n $VM_NAME -g $RESOURCE_GROUP \
---scripts '@("start /wait /b powershell.exe ""Set-WinUserLanguageList -LanguageList ja-JP,en-US -Force; Set-Culture -CultureInfo ja-JP; Set-WinHomeLocation -GeoId 0x7a""", "del ""%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\00setenv.lnk""", "D:\MyVPNInst.EXE") -Join "`n" | Out-File -FilePath D:/00setenv.cmd -Encoding ASCII' \
+--scripts '@("start /wait /b powershell.exe ""Set-WinUserLanguageList -LanguageList ja-JP,en-US -Force; Set-Culture -CultureInfo ja-JP; Set-WinHomeLocation -GeoId 0x7a""", "del ""%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\Startup\00setenv.lnk""", "D:\MyVPNInst.EXE") -Join "`n" | Out-File -FilePath D:/00setenv.cmd -Encoding ASCII' \
 '$WsShell = New-Object -ComObject WScript.Shell' \
-'$Shortcut = $WsShell.CreateShortcut("C:\Users\'${ADMIN_USER}'\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\00setenv.lnk")' \
+'$Shortcut = $WsShell.CreateShortcut("C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\00setenv.lnk")' \
 '$Shortcut.TargetPath = "D:\00setenv.cmd"' \
 '$Shortcut.Save()' \
 'Invoke-WebRequest "'${INSTALL_URI}'" -OutFile "'${INSTALL_FILE}'"'
