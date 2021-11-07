@@ -4,8 +4,9 @@ echo "[1-set]"
 
 . $(dirname "$0")/environment
 
-#CLIENT_IP_ADDRESS=$(wget -q -O- https://checkip.amazonaws.com/)
-read -p "Your client IP address: " CLIENT_IP_ADDRESS
+CLIENT_IP_ADDRESS=$(wget -q -O- https://checkip.amazonaws.com/)
+read -p "Your client IP address["$CLIENT_IP_ADDRESS"]: "
+CLIENT_IP_ADDRESS=${REPLY:-$CLIENT_IP_ADDRESS}
 INSTALL_URI=$(az keyvault secret show --vault-name ${VAULT_NAME} -n "installUri" --query value -o tsv)
 INSTALL_FILE="D:/"$(basename $INSTALL_URI)
 
