@@ -25,7 +25,8 @@ az vm run-command invoke  --command-id RunPowerShellScript -n $VM_NAME -g $RESOU
 'Set-TimeZone -Id "Tokyo Standard Time"' \
 'Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Keyboard Layouts\00000411" -Name "Layout File" -Value kbd106.dll' \
 'Set-Service -Name "audiosrv" -StartupType "Automatic"' \
-'Set-Service -Name "AudioEndpointBuilder" -StartupType "Automatic"'
+'Set-Service -Name "AudioEndpointBuilder" -StartupType "Automatic"' \
+'Install-WindowsFeature -Name "RDS-RD-Server" | Out-Null'
 
 echo "Restart..."
 az vm restart -g $RESOURCE_GROUP -n $VM_NAME
